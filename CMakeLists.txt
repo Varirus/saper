@@ -27,4 +27,14 @@ add_compile_options(-Werror=array-bounds)
 add_compile_options ( -Wcast-qual )
 add_compile_options ( -Wmaybe-uninitialized )
 
-add_executable(saper main.cpp MinesweeperBoard.cpp MinesweeperBoard.h)
+
+# Create a list with all .cpp source files
+set( project_sources
+   main.cpp
+   MinesweeperBoard.cpp
+   MinesweeperBoard.h
+)
+
+# Create executable with all necessary source files
+add_executable(${PROJECT_NAME}
+  ${project_sources})
