@@ -34,6 +34,7 @@
 *.exe
 *.out
 *.app
+output/*
 
 ### CMake ###
 CMakeLists.txt.user
@@ -47,7 +48,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-build/.cmake/api/v1/reply/*
+build/.cmake/api/v1/*
 
 ### CMake Patch ###
 # External projects
@@ -55,7 +56,7 @@ build/.cmake/api/v1/reply/*
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
