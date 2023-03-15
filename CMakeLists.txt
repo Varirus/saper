@@ -32,7 +32,6 @@ add_compile_options ( -Wmaybe-uninitialized )
 set( project_sources
    main.cpp
    MinesweeperBoard.cpp
-   MinesweeperBoard.h
 )
 
 # Create executable with all necessary source files
