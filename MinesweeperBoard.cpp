@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "MinesweeperBoard.h"
 
 using std::cout;
@@ -21,7 +22,7 @@ MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
     state = RUNNING;
 
     initialize_board();
-    test_3_fields();
+    //test_3_fields();
     setMines();
 }
 
@@ -36,34 +37,39 @@ GameState MinesweeperBoard::getGameState() const { return state; }
 //
 // Parametry: -
 // Zwraca: -
-// TODO losowe rozstawianie min
+//
 void MinesweeperBoard::setMines()
 {
     if (mode == DEBUG)
     {
-        // Dla pola 10x10
-        board[0][0].hasMine = true;
-        board[2][0].hasMine = true;
-        board[4][0].hasMine = true;
-        board[1][8].hasMine = true;
-        board[3][5].hasMine = true;
-        board[8][9].hasMine = true;
-        board[5][0].hasMine = true;
-        board[6][2].hasMine = true;
-        board[1][3].hasMine = true;
-
+        // Caly wiersz 1 ma miny
+        for (int i = 0; i < width; i++)
+        {
+            board[0][i].hasMine = true;
+        }
+        
+        return;
     }
     if (mode == EASY)
-    {
-        mineCount = 0.1 * (width * height);
-    }
+        mineCount = std::ceil(0.1 * (width * height));
+    
     if (mode == NORMAL)
-    {
-        mineCount = 0.2 * (width * height);
-    }
+        mineCount = std::ceil(0.2 * (width * height));
+
     if (mode == HARD)
+        mineCount = std::ceil(0.3 * (width * height));
+
+    srand(time(0));
+    for (int i = 0; i < mineCount; i++)
     {
-        mineCount = 0.3 * (width * height);
+        int rand_col = rand() % height;
+        int rand_row = rand() % width;
+
+        if (!(board[rand_col][rand_row].hasMine))
+            board[rand_col][rand_row].hasMine = true;
+
+        else
+            i--;
     }
 }
 
@@ -178,7 +184,10 @@ int MinesweeperBoard::countMines(int row, int col) const
     {
         for (int j = -1; j <= 1; j++)
         {
-            if(i == 0 && j == 0){ break; }
+            if (i == 0 && j == 0)
+            {
+                break;
+            }
             if (fieldExist(row + i, col + j))
             {
                 if (board[col + j][row + i].hasMine)
@@ -238,14 +247,16 @@ void MinesweeperBoard::toggleFlag(int row, int col)
     {
         return;
     }
-    if(isRevealed(row, col))
+    if (isRevealed(row, col))
     {
         return;
     }
-    if(state == FINISHED_LOSS || state == FINISHED_WIN){
+    if (state == FINISHED_LOSS || state == FINISHED_WIN)
+    {
         return;
     }
-    if(hasFlag(row, col)){
+    if (hasFlag(row, col))
+    {
         board[col][row].hasFlag = false;
     }
     board[col][row].hasFlag = true;
@@ -273,16 +284,19 @@ void MinesweeperBoard::revealField(int row, int col)
     {
         return;
     }
-    if(hasFlag(row, col)){
+    if (hasFlag(row, col))
+    {
         return;
     }
-    if (state == FINISHED_LOSS || state == FINISHED_WIN){
+    if (state == FINISHED_LOSS || state == FINISHED_WIN)
+    {
         return;
     }
-    if(!(board[col][row].hasMine)){
+    if (!(board[col][row].hasMine))
+    {
         board[col][row].isRevealed = true;
     }
-    // TODO first player action, relocate bomb [NOT IN DEBUG]
+    // TODO if first player action, then relocate bomb [NOT IN DEBUG]
     board[col][row].isRevealed = true;
     state = FINISHED_LOSS;
 }
@@ -323,7 +337,8 @@ bool MinesweeperBoard::isRevealed(int row, int col) const
 // ' ' - odkryte, bez min wokół
 // '1 ..... 8' - odkryte, miny wokół
 //
-char MinesweeperBoard::getFieldInfo(int row, int col) const{
+char MinesweeperBoard::getFieldInfo(int row, int col) const
+{
     if (!(fieldExist(row, col)))
     {
         return '#';
@@ -336,14 +351,15 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const{
         }
         return '_';
     }
-    if(board[col][row].hasMine){
+    if (board[col][row].hasMine)
+    {
         return 'x';
     }
     int mines = countMines(row, col);
-    if(mines == 0){
+    if (mines == 0)
+    {
         return ' ';
     }
-    mines+=48;
+    mines += 48;
     return mines;
-    
 }
