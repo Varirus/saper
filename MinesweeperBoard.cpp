@@ -8,21 +8,36 @@ using std::cout;
 // ilość bomb. Inicjalizuje pole oraz wywołuje
 // funkcje testową
 //
+// Domyślny kontstuktor:
+// h = 10
+// w = 10
+// m = NORMAL
+//
 // Parametry: h - wysokość
 // w - szerokość
 // m - tryb gry
 //
 // Zwraca: -
 //
-MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
+MinesweeperBoard::MinesweeperBoard()
 {
-    height = h;
-    width = w;
-    mode = m;
-    state = RUNNING;
+    height = 10;
+    width = 10;
+    mode = NORMAL;
 
+    firstMove = true;
+    unreaveled = height * width;
+    state = RUNNING;
     initialize_board();
-    //test_3_fields();
+    setMines();
+}
+MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
+    : height(h), width(w), mode(m)
+{
+    firstMove = true;
+    unreaveled = height * width;
+    state = RUNNING;
+    initialize_board();
     setMines();
 }
 
@@ -31,47 +46,6 @@ int MinesweeperBoard::getWidth() const { return width; }
 int MinesweeperBoard::getHeight() const { return height; }
 int MinesweeperBoard::getMineCount() const { return mineCount; }
 GameState MinesweeperBoard::getGameState() const { return state; }
-
-// Funkcja na podstawie trybu gry
-// ustawia ilość bomb na planszy
-//
-// Parametry: -
-// Zwraca: -
-//
-void MinesweeperBoard::setMines()
-{
-    if (mode == DEBUG)
-    {
-        // Caly wiersz 1 ma miny
-        for (int i = 0; i < width; i++)
-        {
-            board[0][i].hasMine = true;
-        }
-        
-        return;
-    }
-    if (mode == EASY)
-        mineCount = std::ceil(0.1 * (width * height));
-    
-    if (mode == NORMAL)
-        mineCount = std::ceil(0.2 * (width * height));
-
-    if (mode == HARD)
-        mineCount = std::ceil(0.3 * (width * height));
-
-    srand(time(0));
-    for (int i = 0; i < mineCount; i++)
-    {
-        int rand_col = rand() % height;
-        int rand_row = rand() % width;
-
-        if (!(board[rand_col][rand_row].hasMine))
-            board[rand_col][rand_row].hasMine = true;
-
-        else
-            i--;
-    }
-}
 
 // Funkcja inicjalizuje plansze o rozmiarach
 // height*width ustawiajac pola na bez bomb,
@@ -93,18 +67,45 @@ void MinesweeperBoard::initialize_board()
     }
 }
 
-// Funkcja ustawia na 3 polach flagi,
-// bomby i odkrycia w celach testowych.
+// Funkcja na podstawie trybu gry
+// ustawia ilość bomb na planszy
 //
 // Parametry: -
 // Zwraca: -
 //
-void MinesweeperBoard::test_3_fields()
+void MinesweeperBoard::setMines()
 {
-    board[0][0].hasMine = true;
-    board[1][1].isRevealed = true;
-    board[0][2].hasFlag = true;
-    board[0][2].hasMine = true;
+    if (mode == DEBUG)
+    {
+        // Caly wiersz 1 ma miny
+        for (int i = 0; i < width; i++)
+        {
+            board[0][i].hasMine = true;
+        }
+
+        return;
+    }
+    if (mode == EASY)
+        mineCount = std::ceil(0.1 * (width * height));
+
+    if (mode == NORMAL)
+        mineCount = std::ceil(0.2 * (width * height));
+
+    if (mode == HARD)
+        mineCount = std::ceil(0.3 * (width * height));
+
+    srand(time(0));
+    for (int i = 0; i < mineCount; i++)
+    {
+        int rand_row = rand() % height;
+        int rand_col = rand() % width;
+
+        if (!(board[rand_row][rand_col].hasMine))
+            board[rand_row][rand_col].hasMine = true;
+
+        else
+            i--;
+    }
 }
 
 // Funkcja wyswietla w terminalu plansze
@@ -139,7 +140,7 @@ void MinesweeperBoard::debug_display() const
     }
 }
 
-// Funkcja zwraca czy pole [col][row]
+// Funkcja zwraca czy pole [row][col]
 // jest w planszy
 //
 // Parametry: row - numer rzedu
@@ -151,7 +152,7 @@ void MinesweeperBoard::debug_display() const
 //
 bool MinesweeperBoard::fieldExist(int row, int col) const
 {
-    if (row >= width || row < 0 || col >= height || col < 0)
+    if (row >= height || row < 0 || col >= width || col < 0)
     {
         return false;
     }
@@ -159,7 +160,7 @@ bool MinesweeperBoard::fieldExist(int row, int col) const
 }
 
 // Funkcja zlicza ilość bomb wokół
-// podanego pola [col][row].
+// podanego pola [row][col].
 //
 // Parametry: row - numer rzedu
 // col - numer kolumny
@@ -188,7 +189,7 @@ int MinesweeperBoard::countMines(int row, int col) const
             {
                 break;
             }
-            if (fieldExist(row + i, col + j))
+            if (fieldExist(col + i, row + j))
             {
                 if (board[col + j][row + i].hasMine)
                 {
@@ -200,7 +201,7 @@ int MinesweeperBoard::countMines(int row, int col) const
     return mineAround;
 }
 
-// Funkcja zwraca czy pole [col][row]
+// Funkcja zwraca czy pole [row][col]
 // ma na sobie flage.
 //
 // Parametry: row - numer rzedu
@@ -222,14 +223,14 @@ bool MinesweeperBoard::hasFlag(int row, int col) const
     {
         return false;
     }
-    if (!(board[col][row].hasFlag))
+    if (!(board[row][col].hasFlag))
     {
         return false;
     }
     return true;
 }
 
-// Funkcja nadaje flage polu[col][row],
+// Funkcja nadaje flage polu[row][col],
 // które nie zostało odkryte.
 // Nie robi nic, gdy:
 // - pole odkryte
@@ -257,12 +258,12 @@ void MinesweeperBoard::toggleFlag(int row, int col)
     }
     if (hasFlag(row, col))
     {
-        board[col][row].hasFlag = false;
+        board[row][col].hasFlag = false;
     }
-    board[col][row].hasFlag = true;
+    board[row][col].hasFlag = true;
 }
 
-// Funkcja odkrywa pole[col][row].
+// Funkcja odkrywa pole[row][col].
 // Nie robi nic, gdy:
 // - pole odkryte
 // - pole poza planszą
@@ -292,16 +293,50 @@ void MinesweeperBoard::revealField(int row, int col)
     {
         return;
     }
-    if (!(board[col][row].hasMine))
-    {
-        board[col][row].isRevealed = true;
+
+    board[row][col].isRevealed = true;
+    unreaveled--;
+
+    // Zasada pierwszego ruchu
+    if(firstMove){
+        if (board[row][col].hasMine && mode != DEBUG)
+        {
+            board[row][col].hasMine = false;
+            relocateMine(row, col);
+        }
+        firstMove = false;
     }
-    // TODO if first player action, then relocate bomb [NOT IN DEBUG]
-    board[col][row].isRevealed = true;
-    state = FINISHED_LOSS;
+    // Przegrana
+    if (board[row][col].hasMine)
+    {
+        state = FINISHED_LOSS;
+        return;
+    }
+    // Wy
+    if(unreaveled == mineCount){
+        state = FINISHED_WIN;
+    }
 }
 
-// Funkcja zwraca czy pole [col][row]
+void MinesweeperBoard::relocateMine(int row, int col)
+{
+    bool isSet = false;
+    while (!isSet)
+    {
+        int rand_row = rand() % height;
+        int rand_col = rand() % width;
+
+        if (row != rand_row && col != rand_col){
+            if (!(board[rand_row][rand_col].hasMine))
+            {
+                board[rand_row][rand_col].hasMine = true;
+                isSet = true;
+            }
+        }
+    }
+}
+
+// Funkcja zwraca czy pole [row][col]
 // zostalo odkryte.
 //
 // Parametry: row - numer rzedu
@@ -318,14 +353,14 @@ bool MinesweeperBoard::isRevealed(int row, int col) const
     {
         return false;
     }
-    if (!(board[col][row].isRevealed))
+    if (!(board[row][col].isRevealed))
     {
         return false;
     }
     return true;
 }
 
-// Funkcja zwraca informacje o polu [col][row].
+// Funkcja zwraca informacje o polu [row][col].
 //
 // Parametry: row - numer rzedu
 // col - numer kolumny
@@ -351,7 +386,7 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const
         }
         return '_';
     }
-    if (board[col][row].hasMine)
+    if (board[row][col].hasMine)
     {
         return 'x';
     }

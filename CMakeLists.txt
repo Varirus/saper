@@ -32,6 +32,8 @@ add_compile_options ( -Wmaybe-uninitialized )
 set( project_sources
    main.cpp
    MinesweeperBoard.cpp
+   MSBoardTextView.cpp
+   MSTextController.cpp
 )
 
 # Create executable with all necessary source files

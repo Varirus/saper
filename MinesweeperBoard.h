@@ -24,15 +24,15 @@ struct Field
 
 class MinesweeperBoard
 {
-    Field board[100][100];
+    int height;    // rzeczywista wysokość planszy
+    int width;     // rzeczywista szerokość planszy
+    GameMode mode; // tryb gry
 
-    // niezbędne jeśli użyjecie tablicy 2D, ale w każdym
-    // przypadku wygodne
-    int width;       // rzeczywista szerokość planszy
-    int height;      // rzeczywista wysokość planszy
-    int mineCount;   // ilość bomb
-    GameMode mode;   // tryb gry
-    GameState state; // stan gry
+    Field board[100][100]; // tablica pól
+    int mineCount;         // ilość bomb
+    int unreaveled;        // ilość nieodkrytych pól
+    bool firstMove;        // czy pierwszy ruch
+    GameState state;       // stan gry
 
 public:
     // getters
@@ -41,17 +41,18 @@ public:
     int getMineCount() const;       // getter ilości bomb
     GameState getGameState() const; // getter stan gry
 
-    MinesweeperBoard(int h, int w, GameMode mode); // konstruktor
-    void setMines();                               // ustawia bomby w zależności od trybu gry
-    void initialize_board();                       // Inicjalizacja pustej planszy
-    void test_3_fields();                          // test 3 pól
-    void debug_display() const;                    // wyswietlanie planszy
+    MinesweeperBoard();                                  // domyślny konstruktor
+    explicit MinesweeperBoard(int h, int w, GameMode m); // konstruktor
+    void initialize_board();                             // Inicjalizacja pustej planszy
+    void setMines();                                     // ustawia bomby w zależności od trybu gry
+    void debug_display() const;                          // wyswietlanie planszy
 
     bool fieldExist(int row, int col) const;   // sprawdza czy pole znajduje sie w planszy
     int countMines(int row, int col) const;    // liczenie min wokół pola
     bool hasFlag(int row, int col) const;      // sprawdzenie flagi na polu
     void toggleFlag(int row, int col);         // zmienia stan flagi na polu
     void revealField(int row, int col);        // odkrywa pole
+    void relocateMine(int row, int col);       // zmienia lokalizacje bomby
     bool isRevealed(int row, int col) const;   // sprawdzenie odkrycie pola
     char getFieldInfo(int row, int col) const; // zwraca informacje o polu
 };
