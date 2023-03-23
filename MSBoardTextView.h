@@ -4,10 +4,10 @@
 
 class MSBoardTextView
 {
-    MinesweeperBoard *board; // wskaźnik na plansze
+    MinesweeperBoard & board; // plansza
 
 public:
-    MSBoardTextView(MinesweeperBoard &b); // konstruktor
+    MSBoardTextView(MinesweeperBoard & b); // konstruktor
     void display() const;                 // wyświetlenie planszy
 };
 
