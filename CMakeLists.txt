@@ -1,32 +1,19 @@
-cmake_minimum_required(VERSION 3.22)
-project(saper)
+cmake_minimum_required (VERSION 3.1)
+
+project (saper)
 
 set(CMAKE_CXX_STANDARD 14)
+add_compile_options(-Wall -Wextra -pedantic -Werror=return-type -Werror=parentheses -Werror=vla -Werror=array-bounds -Wcast-qual -Wmaybe-uninitialized )
 
-# tego brakuje !! To są opcje, których ja sam używam w moich programach
-# te opcje muszą być ZAWSZE włączone
-add_compile_options(-Wall -Wextra)
+# Windows specific config
+IF (WIN32)
+    # Include local sfml cmake config
+    set(SFML_DIR "C:/lib/SFML-2.5.1/lib/cmake/SFML")
+    # Link sfml statically (Optional)
+    set(SFML_STATIC_LIBRARIES TRUE)
+ENDIF()
 
-# chcemy, by nasz kod był w pełni zgodny ze standardem
-add_compile_options(-pedantic)
-
-# zmieniamy niektóre ostrzeżenia na błędy
-# missing return in non-void function: “control reaches end of non-void function"
-add_compile_options(-Werror=return-type)
-
-# misleading parentheses - read here: https://www.ibm.com/docs/en/ztpf/1.1.0.14?topic=warnings-parentheses
-add_compile_options(-Werror=parentheses)
-
-# VLA is a non-standard feature of some c++ compilers - this prevents its usage
-add_compile_options(-Werror=vla)
-
-# detect some trivial array-bounds errors in code (only compile-time !!)
-add_compile_options(-Werror=array-bounds)
-
-# additional warnings
-add_compile_options ( -Wcast-qual )
-add_compile_options ( -Wmaybe-uninitialized )
-
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
 # Create a list with all .cpp source files
 set( project_sources
@@ -39,3 +26,6 @@ set( project_sources
 # Create executable with all necessary source files
 add_executable(${PROJECT_NAME}
   ${project_sources})
+
+# Link SFML libraries
+target_link_libraries(saper sfml-graphics)
