@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <string.h>
 #include "MinesweeperBoard.h"
 
 using std::cout;
@@ -185,13 +186,9 @@ int MinesweeperBoard::countMines(int row, int col) const
     {
         for (int j = -1; j <= 1; j++)
         {
-            if (i == 0 && j == 0)
+            if (fieldExist(row + i, col + j))
             {
-                break;
-            }
-            if (fieldExist(col + i, row + j))
-            {
-                if (board[col + j][row + i].hasMine)
+                if (board[row + i][col + j].hasMine)
                 {
                     mineAround++;
                 }
@@ -306,13 +303,27 @@ void MinesweeperBoard::revealField(int row, int col)
         }
         firstMove = false;
     }
+
+    // Rekurencyjne wywolanie dla funkcji jesli, wokół
+    // odkrytego pola nie ma bomb
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int j = -1; j <= 1; j++)
+        {
+            if (countMines(row, col) == 0)
+            {
+                revealField(row + i, col + j);
+            }
+        }
+    }
+    
     // Przegrana
     if (board[row][col].hasMine)
     {
         state = FINISHED_LOSS;
         return;
     }
-    // Wy
+    // Wygrana
     if(unreaveled == mineCount){
         state = FINISHED_WIN;
     }
