@@ -295,7 +295,8 @@ void MinesweeperBoard::revealField(int row, int col)
     unreaveled--;
 
     // Zasada pierwszego ruchu
-    if(firstMove){
+    if (firstMove)
+    {
         if (board[row][col].hasMine && mode != DEBUG)
         {
             board[row][col].hasMine = false;
@@ -316,7 +317,7 @@ void MinesweeperBoard::revealField(int row, int col)
             }
         }
     }
-    
+
     // Przegrana
     if (board[row][col].hasMine)
     {
@@ -324,7 +325,8 @@ void MinesweeperBoard::revealField(int row, int col)
         return;
     }
     // Wygrana
-    if(unreaveled == mineCount){
+    if (unreaveled == mineCount)
+    {
         state = FINISHED_WIN;
     }
 }
@@ -337,7 +339,8 @@ void MinesweeperBoard::relocateMine(int row, int col)
         int rand_row = rand() % height;
         int rand_col = rand() % width;
 
-        if (row != rand_row && col != rand_col){
+        if (row != rand_row && col != rand_col)
+        {
             if (!(board[rand_row][rand_col].hasMine))
             {
                 board[rand_row][rand_col].hasMine = true;

@@ -10,7 +10,6 @@ int main()
     MSBoardTextView view(board);
     MSTextController ctrl(board, view);
     board.debug_display();
-
     ctrl.play();
     return 0;
 }
