@@ -21,6 +21,7 @@ set( project_sources
    MinesweeperBoard.cpp
    MSBoardTextView.cpp
    MSTextController.cpp
+   MSBoardView.cpp
 )
 
 # Create executable with all necessary source files
