@@ -4,11 +4,21 @@
 
 class MSBoardTextView
 {
-    MinesweeperBoard &board; // plansza
+    MinesweeperBoard &board; // board
 
 public:
-    MSBoardTextView(MinesweeperBoard &b); // konstruktor
-    void display() const;                 // wyświetlenie planszy
+    /**
+     * @brief Construct a new MSBoardTextView object
+     * 
+     * @param b board
+     */
+    MSBoardTextView(MinesweeperBoard &b);
+
+    /**
+     * @brief Displays board view in terminal for the player.
+     * 
+     */
+    void display() const;
 };
 
 #endif

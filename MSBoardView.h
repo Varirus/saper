@@ -5,16 +5,40 @@
 
 class MSBoardView
 {
-    MinesweeperBoard &board; // plansza
-    sf::RectangleShape field;
-    sf::Text text;
-    sf::Font minesweeperFont;
+    MinesweeperBoard &board; // Board
+    sf::RectangleShape field; // Field squares
+    sf::Text text; // Field info text
+    sf::Font minesweeperFont; // Font
 
 public:
-    MSBoardView(MinesweeperBoard &b);    // konstruktor
-    void display(sf::RenderWindow &win); // wyświetlenie planszy
-    void setFontSettings();              // Ustawia domyślne ustawienia czcionki
-    void drawField(int row, int col, sf::RenderWindow &win); // Ustawia tekst dla danej komórki
+    /**
+     * @brief Construct a new MSBoardView object. Sets font and field squares settings.
+     * 
+     * @param b MinesweeperBoard object
+     */
+    MSBoardView(MinesweeperBoard &b);
+    
+    /**
+     * @brief Function displays board on the window.
+     * 
+     * @param win render window
+     */
+    void display(sf::RenderWindow &win);
+
+    /**
+     * @brief Set the Font default settings/
+     * 
+     */
+    void setFontSettings();
+
+    /**
+     * @brief Function draws field on the window.
+     * 
+     * @param row row number
+     * @param col column number
+     * @param win render window
+     */
+    void drawField(int row, int col, sf::RenderWindow &win);
 };
 
 #endif

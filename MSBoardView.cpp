@@ -24,7 +24,7 @@ void MSBoardView::setFontSettings()
 void MSBoardView::drawField(int row, int col, sf::RenderWindow &win)
 {
     text.setPosition(40 * col + 26, 40 * row + 26);
-    field.setPosition(40 * col + 20, 40 * row + 20);    
+    field.setPosition(40 * col + 20, 40 * row + 20);
 
     char fieldInfo = board.getFieldInfo(row, col);
     if (fieldInfo == '_')
@@ -42,7 +42,7 @@ void MSBoardView::drawField(int row, int col, sf::RenderWindow &win)
     if (fieldInfo == '3')
         text.setFillColor(sf::Color::Red);
     if (fieldInfo == '4')
-        text.setFillColor(sf::Color(230, 230, 250));
+        text.setFillColor(sf::Color(130, 130, 150));
     if (fieldInfo == '5')
         text.setFillColor(sf::Color(128, 0, 0));
     if (fieldInfo == '6')
@@ -61,14 +61,6 @@ void MSBoardView::drawField(int row, int col, sf::RenderWindow &win)
     win.draw(text);
 }
 
-// Funkcja wyświetla w podanym oknie
-// plansze graficznie.
-//
-// Parametry: win - okno do
-// wyświetlenia planszy
-//
-// Zwraca: -
-//
 void MSBoardView::display(sf::RenderWindow &win)
 {
     for (int i = 0; i < board.getHeight(); i++)

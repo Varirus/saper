@@ -5,56 +5,20 @@
 
 using std::cout;
 
-// Konstruktor ustawiający wysokość, szerokość,
-// ilość bomb. Inicjalizuje pole oraz wywołuje
-// funkcje testową
-//
-// Domyślny kontstuktor:
-// h = 10
-// w = 10
-// m = NORMAL
-//
-// Parametry: h - wysokość
-// w - szerokość
-// m - tryb gry
-//
-// Zwraca: -
-//
-MinesweeperBoard::MinesweeperBoard()
-{
-    height = 10;
-    width = 10;
-    mode = NORMAL;
-
-    firstMove = true;
-    unreaveled = height * width;
-    state = RUNNING;
-    initialize_board();
-    setMines();
-}
-MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
-    : height(h), width(w), mode(m)
-{
-    firstMove = true;
-    unreaveled = height * width;
-    state = RUNNING;
-    initialize_board();
-    setMines();
-}
-
-// Gettery
 int MinesweeperBoard::getWidth() const { return width; }
 int MinesweeperBoard::getHeight() const { return height; }
 int MinesweeperBoard::getMineCount() const { return mineCount; }
 GameState MinesweeperBoard::getGameState() const { return state; }
 
-// Funkcja inicjalizuje plansze o rozmiarach
-// height*width ustawiajac pola na bez bomb,
-// bez flag i zakryte.
-//
-// Parametry: -
-// Zwraca: -
-//
+MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
+    : height(h), width(w), mode(m)
+{
+    unreaveled = height * width;
+    state = RUNNING;
+    initialize_board();
+    setMines();
+}
+
 void MinesweeperBoard::initialize_board()
 {
     for (int i = 0; i < height; i++)
@@ -68,12 +32,6 @@ void MinesweeperBoard::initialize_board()
     }
 }
 
-// Funkcja na podstawie trybu gry
-// ustawia ilość bomb na planszy
-//
-// Parametry: -
-// Zwraca: -
-//
 void MinesweeperBoard::setMines()
 {
     if (mode == DEBUG)
@@ -109,13 +67,6 @@ void MinesweeperBoard::setMines()
     }
 }
 
-// Funkcja wyswietla w terminalu plansze
-// sapera, a na kazdym polu czy znajduje sie mina,
-// czy pole jest odkryte oraz czy jest oflagowane
-//
-// Parametry: -
-// Zwraca: -
-//
 void MinesweeperBoard::debug_display() const
 {
     for (int i = 0; i < height; i++)
@@ -141,16 +92,6 @@ void MinesweeperBoard::debug_display() const
     }
 }
 
-// Funkcja zwraca czy pole [row][col]
-// jest w planszy
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: true, jeśli pole w planszy
-// false, gdy:
-// - pole poza planszą
-//
 bool MinesweeperBoard::fieldExist(int row, int col) const
 {
     if (row >= height || row < 0 || col >= width || col < 0)
@@ -160,16 +101,6 @@ bool MinesweeperBoard::fieldExist(int row, int col) const
     return true;
 }
 
-// Funkcja zlicza ilość bomb wokół
-// podanego pola [row][col].
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: ilość bomb
-// -1, gdy pole poza planszą
-// -1, gdy pole nieodkryte
-//
 int MinesweeperBoard::countMines(int row, int col) const
 {
     if (!(fieldExist(row, col)))
@@ -198,18 +129,6 @@ int MinesweeperBoard::countMines(int row, int col) const
     return mineAround;
 }
 
-// Funkcja zwraca czy pole [row][col]
-// ma na sobie flage.
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: true, jeśli pole ma na sobie flage
-// false, gdy:
-// - pole poza planszą
-// - nie ma flagi
-// - pole odkryte
-//
 bool MinesweeperBoard::hasFlag(int row, int col) const
 {
     if (!(fieldExist(row, col)))
@@ -227,18 +146,6 @@ bool MinesweeperBoard::hasFlag(int row, int col) const
     return true;
 }
 
-// Funkcja nadaje flage polu[row][col],
-// które nie zostało odkryte.
-// Nie robi nic, gdy:
-// - pole odkryte
-// - pole poza planszą
-// - gra zakończona
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: -
-//
 void MinesweeperBoard::toggleFlag(int row, int col)
 {
     if (!(fieldExist(row, col)))
@@ -260,18 +167,6 @@ void MinesweeperBoard::toggleFlag(int row, int col)
     board[row][col].hasFlag = true;
 }
 
-// Funkcja odkrywa pole[row][col].
-// Nie robi nic, gdy:
-// - pole odkryte
-// - pole poza planszą
-// - gra zakończona
-// - flaga na polu
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: -
-//
 void MinesweeperBoard::revealField(int row, int col)
 {
     if (!(fieldExist(row, col)))
@@ -291,22 +186,20 @@ void MinesweeperBoard::revealField(int row, int col)
         return;
     }
 
-    board[row][col].isRevealed = true;
-    unreaveled--;
-
-    // Zasada pierwszego ruchu
-    if (firstMove)
+    // First move rule
+    if (height*width == unreaveled)
     {
         if (board[row][col].hasMine && mode != DEBUG)
         {
             board[row][col].hasMine = false;
             relocateMine(row, col);
         }
-        firstMove = false;
     }
 
-    // Rekurencyjne wywolanie dla funkcji jesli, wokół
-    // odkrytego pola nie ma bomb
+    board[row][col].isRevealed = true;
+    unreaveled--;
+
+    // Recursive bomb reveal for field with no mines around.
     for (int i = -1; i <= 1; i++)
     {
         for (int j = -1; j <= 1; j++)
@@ -350,17 +243,6 @@ void MinesweeperBoard::relocateMine(int row, int col)
     }
 }
 
-// Funkcja zwraca czy pole [row][col]
-// zostalo odkryte.
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: true, jeśli pole odkryte
-// false, gdy:
-// - pole poza planszą
-// - pole nieodkryte
-//
 bool MinesweeperBoard::isRevealed(int row, int col) const
 {
     if (!(fieldExist(row, col)))
@@ -374,18 +256,6 @@ bool MinesweeperBoard::isRevealed(int row, int col) const
     return true;
 }
 
-// Funkcja zwraca informacje o polu [row][col].
-//
-// Parametry: row - numer rzedu
-// col - numer kolumny
-//
-// Zwraca: '#' - pole poza planszą
-// 'F' - nieodkryte, flaga
-// '_' - nieodkryte, bez flagi
-// 'x' - odkryte, mina
-// ' ' - odkryte, bez min wokół
-// '1 ..... 8' - odkryte, miny wokół
-//
 char MinesweeperBoard::getFieldInfo(int row, int col) const
 {
     if (!(fieldExist(row, col)))
