@@ -5,20 +5,20 @@
 
 class MSTextController
 {
-    MinesweeperBoard &board; // board
+    MinesweeperBoard &board; // Board
     MSBoardTextView &view;   // MSBoardTextView object
 public:
     /**
-     * @brief Construct a new MSTextController object.
-     *
-     * @param b board
-     * @param v MSBoardTextView object
+        @brief Construct a new MSTextController object.
+
+        @param b board
+        @param v MSBoardTextView object
      */
     MSTextController(MinesweeperBoard &b, MSBoardTextView &v);
 
     /**
-     * @brief Function starts the game in terminal.
-     * 
+        @brief Function starts the game in terminal.
+
      */
     void play();
 };

@@ -8,15 +8,15 @@ class MSBoardTextView
 
 public:
     /**
-     * @brief Construct a new MSBoardTextView object
-     * 
-     * @param b board
+        @brief Construct a new MSBoardTextView object
+
+        @param b board
      */
     MSBoardTextView(MinesweeperBoard &b);
 
     /**
-     * @brief Displays board view in terminal for the player.
-     * 
+    @brief Displays board view in terminal for the player.
+
      */
     void display() const;
 };

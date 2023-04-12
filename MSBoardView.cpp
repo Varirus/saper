@@ -6,7 +6,7 @@ using std::cout;
 MSBoardView::MSBoardView(MinesweeperBoard &b)
     : board(b)
 {
-    field = sf::RectangleShape(sf::Vector2f(30, 30));
+    field = sf::RectangleShape(sf::Vector2f(18, 18));
     field.setFillColor(sf::Color(200, 200, 200));
     field.setOutlineColor(sf::Color(50, 50, 50));
     field.setOutlineThickness(2);
@@ -18,13 +18,13 @@ void MSBoardView::setFontSettings()
 
     minesweeperFont.loadFromFile("../mine-sweeper.ttf");
     text.setFont(minesweeperFont);
-    text.setCharacterSize(18);
+    text.setCharacterSize(12);
 }
 
 void MSBoardView::drawField(int row, int col, sf::RenderWindow &win)
 {
-    text.setPosition(40 * col + 26, 40 * row + 26);
-    field.setPosition(40 * col + 20, 40 * row + 20);
+    text.setPosition(22 * col + 13, 22 * row + 13);
+    field.setPosition(22 * col + 10, 22 * row + 10);
 
     char fieldInfo = board.getFieldInfo(row, col);
     if (fieldInfo == '_')
@@ -53,10 +53,16 @@ void MSBoardView::drawField(int row, int col, sf::RenderWindow &win)
         text.setFillColor(sf::Color(240, 240, 240));
     if (fieldInfo == 'x')
         text.setFillColor(sf::Color::Black);
-    if (fieldInfo == 'F')
+    if (fieldInfo == 'F'){
         text.setFillColor(sf::Color::Red);
-    if (fieldInfo == ' ')
-        text.setFillColor(sf::Color::Red);
+        text.setString("|>");
+        field.setFillColor(sf::Color(150, 150, 150));
+        win.draw(field);
+        win.draw(text);
+        field.setFillColor(sf::Color(250, 250, 250));
+        return;
+    }
+        
     win.draw(field);
     win.draw(text);
 }

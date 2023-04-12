@@ -4,40 +4,22 @@
 #include "MSBoardTextView.h"
 #include "MSTextController.h"
 #include "MSBoardView.h"
+#include "MSController.h"
 
 int main()
 {
     MinesweeperBoard board(10, 10, EASY);
 
     /* SFML */
-
-    sf::RenderWindow window(sf::VideoMode(board.getWidth() * 40 + 30, board.getHeight() * 40 + 30), "Saper");
+    sf::RenderWindow window(sf::VideoMode(board.getWidth() * 22 + 16, board.getHeight() * 22 + 16), "Saper", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(30);
     MSBoardView view(board);
-    sf::Clock clk;
-    board.toggleFlag(3, 3);
-    board.revealField(5, 4);
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        if (clk.getElapsedTime().asMilliseconds() > 500)
-        {
-            board.revealField(rand() % 10, rand() % 10);
-            if (board.getGameState() == RUNNING)
-            {
-                clk.restart();
-            }
-        }
-        window.clear(sf::Color::Black);
-        view.display(window);
 
-        window.display();
-    }
+    MSController controller(window, board, view);
+
+    controller.play();
+
+    return 0;
 
     /* Terminal */
     //

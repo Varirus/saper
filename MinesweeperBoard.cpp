@@ -187,11 +187,10 @@ void MinesweeperBoard::revealField(int row, int col)
     }
 
     // First move rule
-    if (height*width == unreaveled)
+    if (height * width == unreaveled)
     {
         if (board[row][col].hasMine && mode != DEBUG)
         {
-            board[row][col].hasMine = false;
             relocateMine(row, col);
         }
     }
@@ -199,7 +198,26 @@ void MinesweeperBoard::revealField(int row, int col)
     board[row][col].isRevealed = true;
     unreaveled--;
 
-    // Recursive bomb reveal for field with no mines around.
+    // Recursive reveal for field with no mines around.
+    recursiveReveal(row, col);
+
+    // Lose Condition
+    if (board[row][col].hasMine)
+    {
+        state = FINISHED_LOSS;
+        return;
+    }
+
+    // Win Condition
+    if (unreaveled == mineCount)
+    {
+        toggleFlagOnRemainingFields();
+        state = FINISHED_WIN;
+    }
+}
+
+void MinesweeperBoard::recursiveReveal(int row, int col)
+{
     for (int i = -1; i <= 1; i++)
     {
         for (int j = -1; j <= 1; j++)
@@ -210,22 +228,11 @@ void MinesweeperBoard::revealField(int row, int col)
             }
         }
     }
-
-    // Przegrana
-    if (board[row][col].hasMine)
-    {
-        state = FINISHED_LOSS;
-        return;
-    }
-    // Wygrana
-    if (unreaveled == mineCount)
-    {
-        state = FINISHED_WIN;
-    }
 }
 
 void MinesweeperBoard::relocateMine(int row, int col)
 {
+    board[row][col].hasMine = false;
     bool isSet = false;
     while (!isSet)
     {
@@ -238,6 +245,20 @@ void MinesweeperBoard::relocateMine(int row, int col)
             {
                 board[rand_row][rand_col].hasMine = true;
                 isSet = true;
+            }
+        }
+    }
+}
+
+void MinesweeperBoard::toggleFlagOnRemainingFields()
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (!(isRevealed(i, j)))
+            {
+                toggleFlag(i, j);
             }
         }
     }
@@ -279,6 +300,7 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const
     {
         return ' ';
     }
+    // ASCII convertion
     mines += 48;
     return mines;
 }

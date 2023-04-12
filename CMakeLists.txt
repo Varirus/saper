@@ -16,17 +16,18 @@ ENDIF()
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
 # Create a list with all .cpp source files
-set( project_sources
-   main.cpp
-   MinesweeperBoard.cpp
-   MSBoardTextView.cpp
-   MSTextController.cpp
-   MSBoardView.cpp
+set(project_sources
+    main.cpp
+    MinesweeperBoard.cpp
+    MSBoardTextView.cpp
+    MSTextController.cpp
+    MSBoardView.cpp
+    MSController.cpp
 )
 
 # Create executable with all necessary source files
 add_executable(${PROJECT_NAME}
-  ${project_sources})
+    ${project_sources})
 
 # Link SFML libraries
 target_link_libraries(saper sfml-graphics)
