@@ -29,7 +29,7 @@ public:
 
         @return column number
      */
-    int getFieldColumn(int mouseX);
+    int getFieldColumn(int mouseX) const;
 
     /**
         @brief Function calculates field row depending on mouse Y coordinate.
@@ -38,7 +38,18 @@ public:
 
         @return row number
      */
-    int getFieldRow(int mouseY);
+    int getFieldRow(int mouseY) const;
+
+    /**
+        @brief Function calculates field row depending on mouse Y coordinate.
+
+        @param mouseX mouse X coordinate
+        @param mouseY mouse Y coordinate
+
+        @return \b True - if mouse is on the reset button \n
+        @return \b False - if mouse isn't on the reset button \n
+     */
+    bool isInResetButton(int mouseX, int mouseY);
 
     /**
         @brief Function starts the game in SFML.

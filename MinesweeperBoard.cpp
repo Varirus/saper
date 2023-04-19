@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
 #include <string.h>
 #include "MinesweeperBoard.h"
 
@@ -9,14 +10,12 @@ int MinesweeperBoard::getWidth() const { return width; }
 int MinesweeperBoard::getHeight() const { return height; }
 int MinesweeperBoard::getMineCount() const { return mineCount; }
 GameState MinesweeperBoard::getGameState() const { return state; }
+GameMode MinesweeperBoard::getGameMode() const { return mode; }
 
 MinesweeperBoard::MinesweeperBoard(int h, int w, GameMode m)
     : height(h), width(w), mode(m)
 {
-    unreaveled = height * width;
-    state = RUNNING;
-    initialize_board();
-    setMines();
+    resetBoard();
 }
 
 void MinesweeperBoard::initialize_board()
@@ -41,7 +40,7 @@ void MinesweeperBoard::setMines()
         {
             board[0][i].hasMine = true;
         }
-
+        mineCount = width;
         return;
     }
     if (mode == EASY)
@@ -163,6 +162,7 @@ void MinesweeperBoard::toggleFlag(int row, int col)
     if (hasFlag(row, col))
     {
         board[row][col].hasFlag = false;
+        return;
     }
     board[row][col].hasFlag = true;
 }
@@ -256,7 +256,7 @@ void MinesweeperBoard::toggleFlagOnRemainingFields()
     {
         for (int j = 0; j < width; j++)
         {
-            if (!(isRevealed(i, j)))
+            if (!isRevealed(i, j) && !hasFlag(i, j))
             {
                 toggleFlag(i, j);
             }
@@ -303,4 +303,12 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const
     // ASCII convertion
     mines += 48;
     return mines;
+}
+
+void MinesweeperBoard::resetBoard()
+{
+    unreaveled = height * width;
+    state = RUNNING;
+    initialize_board();
+    setMines();
 }

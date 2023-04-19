@@ -57,6 +57,11 @@ public:
     GameState getGameState() const;
 
     /**
+        @return Mode of the board
+     */
+    GameMode getGameMode() const;
+
+    /**
         @brief Construct a new MinesweeperBoard object. Sets bombs on the board, height and width of the board.
      */
     MinesweeperBoard(int h = 10, int w = 10, GameMode m = NORMAL);
@@ -187,6 +192,11 @@ public:
         @return \b '1.....8' -  field is revealed and has mines around
      */
     char getFieldInfo(int row, int col) const;
+
+    /**
+        @brief Function resets board to basic state.
+     */
+    void resetBoard();
 };
 
 #endif

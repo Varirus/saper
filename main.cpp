@@ -8,11 +8,13 @@
 
 int main()
 {
-    MinesweeperBoard board(10, 10, EASY);
+    MinesweeperBoard board(20, 20, NORMAL);
 
     /* SFML */
-    sf::RenderWindow window(sf::VideoMode(board.getWidth() * 22 + 16, board.getHeight() * 22 + 16), "Saper", sf::Style::Titlebar | sf::Style::Close);
+
+    sf::RenderWindow window(sf::VideoMode(board.getWidth() * 22 + 16, (board.getHeight() + 2) * 22 + 16), "Saper", sf::Style::Close);
     window.setFramerateLimit(30);
+
     MSBoardView view(board);
 
     MSController controller(window, board, view);
@@ -25,7 +27,10 @@ int main()
     //
     // MSBoardTextView view(board);
     // MSTextController ctrl(board, view);
+    //
     // board.debug_display();
+    //
     // ctrl.play();
+    //
     // return 0;
 }

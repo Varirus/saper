@@ -5,10 +5,13 @@
 
 class MSBoardView
 {
-    MinesweeperBoard &board;  // Board
-    sf::RectangleShape field; // Field squares
-    sf::Text text;            // Field info text
-    sf::Font minesweeperFont; // Font
+    MinesweeperBoard &board;        // Board
+    sf::RectangleShape field;       // Field squares
+    sf::RectangleShape resetButton; // Reset button
+    sf::Text resetText;             // Reset text
+    sf::Text finishedText;          // Text for victory/defeat
+    sf::Text text;                  // Field info text
+    sf::Font minesweeperFont;       // Font
 
 public:
     /**
@@ -26,10 +29,22 @@ public:
     void display(sf::RenderWindow &win);
 
     /**
-        @brief Set the Font default settings/
+       @brief Initialize shapes
+
+    */
+    void initShapes();
+
+    /**
+        @brief Sets the Font default settings
 
      */
     void setFontSettings();
+
+    /**
+        @brief Sets Victory or Defeat text
+
+     */
+    void setFinishedText();
 
     /**
         @brief Function draws field on the window.
